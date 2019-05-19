@@ -19,6 +19,7 @@ def index():
 
 @app.route("/services")
 def service():
+    #TEST small number 
     service = pd.read_sql_query('select * from requests_311', con=engine).head()
     data = {
         "issue_type": service.issue_type.tolist(),

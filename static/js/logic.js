@@ -14,17 +14,17 @@ var myMap = L.map("map", {
   
   
   // Grab the data with d3
-  d3.json(`/services`).then(function(data) {
-  
-    // Create a new marker cluster group
+  d3.json("/services").then(function(data){
+       // Create a new marker cluster group
+       //console.log(data);
     var markers = L.markerClusterGroup();
   
     // Loop through data
     for (var i = 0; i < data.length; i++) {
   
       // Set the data location property to a variable
-      var location = data[i].location;
-  
+      var location = data[i].issue_type;
+      //console.log(data[i].issue_type);
       // Check for location property
       if (location) {
   
@@ -37,5 +37,5 @@ var myMap = L.map("map", {
   
     // Add our marker cluster layer to the map
     myMap.addLayer(markers);
-  
+
   });
