@@ -17,10 +17,15 @@ def index():
     #Return to Home
     return render_template('index.html')
 
-@app.route("/services")
-def service():
+@app.route("/services/<sample>")
+def service(sample):
     service = pd.read_sql_query('select * from requests_311', con=engine).head()
-    return jsonify(list(service.columns))
+    data = {
+        "issue_type": service.issue_type.tolist(),
+        "latitude": service.latitude.tolist(),
+        "longitude": service.longitude.tolist() 
+    }
+    return jsonify(data)
 
 
 
