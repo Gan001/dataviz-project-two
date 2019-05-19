@@ -14,23 +14,23 @@ var myMap = L.map("map", {
   
   
   // Grab the data with d3
-  d3.json(`/services/${sample}`).then(function(response) {
+  d3.json(`/services`).then(function(data) {
   
     // Create a new marker cluster group
     var markers = L.markerClusterGroup();
   
     // Loop through data
-    for (var i = 0; i < response.length; i++) {
+    for (var i = 0; i < data.length; i++) {
   
       // Set the data location property to a variable
-      var location = response[i].location;
+      var location = data[i].location;
   
       // Check for location property
       if (location) {
   
         // Add a new marker to the cluster group and bind a pop-up
-        markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
-          .bindPopup(response[i].descriptor));
+        markers.addLayer(L.marker([data.latitude, data.longitude])
+          .bindPopup(data[i].issue_type));
       }
   
     }
