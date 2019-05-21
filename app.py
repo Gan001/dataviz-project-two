@@ -20,7 +20,7 @@ def index():
 @app.route("/services")
 def service():
     #TEST small number 
-    service = pd.read_sql_query('select * from requests_311', con=engine).head()
+    service = pd.read_sql_query('select * from requests_311 limit 100', con=engine)
     data = {
         "issue_type": service.issue_type.tolist(),
         "latitude": service.latitude.tolist(),

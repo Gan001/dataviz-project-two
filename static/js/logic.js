@@ -13,29 +13,19 @@ var myMap = L.map("map", {
   }).addTo(myMap);
   
   
-  // Grab the data with d3
+  // Grab the data with d3 to make markers for issue types
   d3.json("/services").then(function(data){
-       // Create a new marker cluster group
-       //console.log(data);
+    // Create a new marker cluster group
     var markers = L.markerClusterGroup();
-  
-    // Loop through data
-    for (var i = 0; i < data.length; i++) {
-  
-      // Set the data location property to a variable
-      var location = data[i].issue_type;
-      //console.log(data[i].issue_type);
-      // Check for location property
-      if (location) {
-  
-        // Add a new marker to the cluster group and bind a pop-up
-        markers.addLayer(L.marker([data.latitude, data.longitude])
-          .bindPopup(data[i].issue_type));
-      }
-  
+       
+    for(var i = 0; i < data.longitude.length;i++){
+
+      // Add a new marker to the cluster group and bind a pop-up
+      markers.addLayer(L.marker([data.latitude[i], data.longitude[i]])
+        .bindPopup(data.issue_type[i]));
     }
-  
+
     // Add our marker cluster layer to the map
     myMap.addLayer(markers);
-
+    
   });
