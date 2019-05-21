@@ -20,7 +20,7 @@ def index():
 @app.route("/services")
 def service():
     #TEST small number 
-    service = pd.read_sql_query('select * from requests_311', con=engine).head()
+    service = pd.read_sql_query('select * from requests_311 limit 100', con=engine)
     data = {
         "issue_type": service.issue_type.tolist(),
         "latitude": service.latitude.tolist(),
@@ -28,6 +28,13 @@ def service():
     }
     return jsonify(data)
 
+@app.route("/plot3")
+def plot3():
+    return render_template('plot3.html')
+
+@app.route("/plot2")
+def plot2():
+    return render_template('plot2.html')
 
 
 

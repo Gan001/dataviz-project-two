@@ -1,11 +1,60 @@
 body {
-    padding: 0;
-    margin: 0;
-  }
+  padding: 0;
+  margin: 0;
+}
+
+#map,
+body,
+html {
+  height: 100%;
+}
+
+.jumbotron {
+  background: url('https://www.visitflorida.com/content/dam/visitflorida/en-us/images/cities/miami/Downtown2011_08.jpg.1280.500.rendition');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 314px;
+  } 
+
+h2 {
+  align-content: center;
+  color: #027abb;
+  font-family: "Roboto", sans-serif;
+  text-align: center
+}
   
-  #map,
-  body,
-  html {
-    height: 100%;
+/* For Animation in title */
+.animatedText { 
+  animation: fadeAndScale .3s ease-in;
+  transform-origin: center bottom;
+}
+
+@keyframes fadeAndScale {
+  from {
+    opacity: 0;
+    transform: scale3d(.75, .75, 1)
   }
-  
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+
+  }
+}
+/* For Animation in title */
+
+p {
+  font-family: "Roboto", sans-serif;
+}
+
+#landpage-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+  .text-center {
+    text-align: center;
+  }
+
