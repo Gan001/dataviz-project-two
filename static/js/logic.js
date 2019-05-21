@@ -16,26 +16,46 @@ var myMap = L.map("map", {
   // Grab the data with d3
   d3.json("/services").then(function(data){
        // Create a new marker cluster group
-       //console.log(data);
-    var markers = L.markerClusterGroup();
-  
-    // Loop through data
-    for (var i = 0; i < data.length; i++) {
-  
-      // Set the data location property to a variable
-      var location = data[i].issue_type;
+       //console.log(data.issue_type);
+       var markers = L.markerClusterGroup();
+       //Object.entries(data).forEach(()=>{
+         //console.log(data.latitude);
+         
+         // Set the data location property to a variable
+      //var serviceType = data.issue_type;
       //console.log(data[i].issue_type);
       // Check for location property
-      if (location) {
-  
+      //if (serviceType) {
+        //console.log(`test: ${data.longitude}`);
+        for(var i = 0; i < data.longitude.length;i++){
         // Add a new marker to the cluster group and bind a pop-up
-        markers.addLayer(L.marker([data.latitude, data.longitude])
-          .bindPopup(data[i].issue_type));
-      }
+        markers.addLayer(L.marker([data.latitude[i], data.longitude[i]])
+          .bindPopup(data.issue_type[i]));
+      //}
+        }
+      // Add our marker cluster layer to the map
+   // myMap.addLayer(markers);
+       //}); 
+       myMap.addLayer(markers);
+    //var markers = L.markerClusterGroup();
   
-    }
+    // Loop through data
+    // for (var i = 0; i < data.length; i++) {
+  
+    //   // Set the data location property to a variable
+    //   var location = data[i].issue_type;
+    //   console.log(data[i].issue_type);
+    //   // Check for location property
+    //   if (location) {
+  
+    //     // Add a new marker to the cluster group and bind a pop-up
+    //     markers.addLayer(L.marker([data.latitude, data.longitude])
+    //       .bindPopup(data[i].issue_type));
+    //   }
+  
+    // }
   
     // Add our marker cluster layer to the map
-    myMap.addLayer(markers);
+    // myMap.addLayer(markers);
 
   });
