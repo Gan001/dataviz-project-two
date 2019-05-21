@@ -28,3 +28,4 @@ CREATE TABLE requests_311 (
 );
 
 SELECT * FROM requests_311;
+SELECT * FROM census;
