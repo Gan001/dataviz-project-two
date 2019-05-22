@@ -24,7 +24,8 @@ def service():
     data = {
         "issue_type": service.issue_type.tolist(),
         "latitude": service.latitude.tolist(),
-        "longitude": service.longitude.tolist() 
+        "longitude": service.longitude.tolist(),
+        "zip_code": service.zip_code.tolist() 
     }
     return jsonify(data)
 
