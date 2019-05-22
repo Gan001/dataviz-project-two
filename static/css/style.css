@@ -10,11 +10,12 @@ html {
 }
 
 .jumbotron {
-  background: url('https://www.visitflorida.com/content/dam/visitflorida/en-us/images/cities/miami/Downtown2011_08.jpg.1280.500.rendition');
+  background: url('../css/images/miami.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 314px;
+  background-blend-mode: luminosity;
   } 
 
 h2 {
@@ -24,7 +25,7 @@ h2 {
   text-align: center
 }
   
-/* For Animation in title */
+/* For Animation in title 
 .animatedText { 
   animation: fadeAndScale .3s ease-in;
   transform-origin: center bottom;
@@ -41,7 +42,7 @@ h2 {
 
   }
 }
-/* For Animation in title */
+End: For Animation in title */
 
 p {
   font-family: "Roboto", sans-serif;
