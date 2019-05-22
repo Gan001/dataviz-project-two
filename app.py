@@ -29,13 +29,13 @@ def service():
     }
     return jsonify(data)
 
-@app.route("/plot3")
-def plot3():
-    return render_template('plot3.html')
-
 @app.route("/plot2")
 def plot2():
     return render_template('plot2.html')
+
+@app.route("/plot3")
+def plot3():
+    return render_template('plot3.html')
 
 
 

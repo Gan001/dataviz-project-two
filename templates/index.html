@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>311 Requests effciency</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Leaflet JS & CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -75,13 +75,15 @@
   <!-- Landpage pharagrap-->
   <div class="container-fluid">
     <br>
+    <div class="row">
     <div class="col-md-12">
       <h2 class="animatedText"> Miami-Dade 311..  Efficiency Begind The Agencies</h2>
       <br>
       <p class="text-center"> If you live in Miami... would you say that you County it's Efficient? And the effciency level it's related with the income? </p>
       <p class="text-center"> With the purpose of demonstrate the real efficency behind Miami-Dade 311-Requests, we extracted data directly from Miami-Dade County so in this website you'll find the answers.  </p>
     </div>      
-    
+  </div>
+
     <!-- test new library scriptaculous   
     <div id="fade_demo" style="width:80px; height:80px; background:#c2defb; border:1px solid #333;"></div>
     <ul>
@@ -104,127 +106,50 @@
       <script type="text/javascript" src="http://script.aculo.us/prototype.js"></script><script type="text/javascript" src="http://script.aculo.us/scriptaculous.js"></script><script type="text/javascript" src="http://script.aculo.us/builder.js"></script><script type="text/javascript" src="http://script.aculo.us/effects.js"></script><script type="text/javascript" src="http://script.aculo.us/dragdrop.js"></script><script type="text/javascript" src="http://script.aculo.us/controls.js"></script><script type="text/javascript" src="http://script.aculo.us/slider.js"></script><script type="text/javascript" src="http://script.aculo.us/sound.js"></script>
     </div>-->
 
-  </div> <!--Warning: Do not delete this div-->
+    <div class="row">
+      <div class="col-md-4" class="navbar"></div>
+      <div class="col-md-4" > 
+        <p class="mini_navbar"> <a href="plot2">View 2</a> | <a href="plot3">View 3</a> </p>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div> <!--Warning: Do not delete this div. CLosing of conainer-fluid-->
   
+
+
   <br>
 
   
   <!-- TODO: ask jonathan, the id inside col-md-6 it's not working-->
+    <div id="map"></div>
+    <script type="text/javascript" src="../static/js/config.js"></script>
+    <!-- <script type="text/javascript" src="../static/js/logic.js"></script> -->
+    <script src="{{ url_for('static', filename='js/logic.js') }}"></script>
+  
+    <br><br>
+  
+    <!-- button to go to the top -->
+    <!-- TODO: place the button over the map-->
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
     
-      <div id="map"></div>
-      <script type="text/javascript" src="../static/js/config.js"></script>
-      <!-- <script type="text/javascript" src="../static/js/logic.js"></script> -->
-      <script src="{{ url_for('static', filename='js/logic.js') }}"></script>
-    
+    <script>
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+        
+        function scrollFunction() {
+          if (document.body.scrollTop > 10 || document.documentElement.scrollTop > 10) {
+            document.getElementById("myBtn").style.display = "block";
+          } else {
+            document.getElementById("myBtn").style.display = "none";
+          }
+        }
+        
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
+        </script>
 
-    <!-- test-->
-    <!DOCTYPE html>
-  <meta charset="utf-8">
-  <body>
-    <div id="plot3">Cool plot</div>
-  <script src="//d3js.org/d3.v3.min.js"></script>
-  <script>
-
-  var width = 960,
-      height = 500,
-      outerRadius = Math.min(width, height) * .5 - 10,
-      innerRadius = outerRadius * .6;
-
-  var n = 10,
-      data0 = d3.range(n).map(Math.random), // insert data here
-      data1 = d3.range(n).map(Math.random), // insert data here
-      data;
-
-  var color = d3.scale.category20();
-
-  var arc = d3.svg.arc();
-
-  var pie = d3.layout.pie()
-      .sort(null);
-
-  var svg = d3.select("body").append("svg")
-      .attr("width", width)
-      .attr("height", height);
-
-  svg.selectAll(".arc")
-      .data(arcs(data0, data1))
-    .enter().append("g")
-      .attr("class", "arc")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    .append("path")
-      .attr("fill", function(d, i) { return color(i); })
-      .attr("d", arc);
-
-  transition(1);
-
-  function arcs(data0, data1) {
-    var arcs0 = pie(data0),
-        arcs1 = pie(data1),
-        i = -1,
-        arc;
-    while (++i < n) {
-      arc = arcs0[i];
-      arc.innerRadius = innerRadius;
-      arc.outerRadius = outerRadius;
-      arc.next = arcs1[i];
-    }
-    return arcs0;
-  }
-
-  function transition(state) {
-    var path = d3.selectAll(".arc > path")
-        .data(state ? arcs(data0, data1) : arcs(data1, data0));
-
-    // Wedges split into two rings.
-    var t0 = path.transition()
-        .duration(1000)
-        .attrTween("d", tweenArc(function(d, i) {
-          return {
-            innerRadius: i & 1 ? innerRadius : (innerRadius + outerRadius) / 2,
-            outerRadius: i & 1 ? (innerRadius + outerRadius) / 2 : outerRadius
-          };
-        }));
-
-    // Wedges translate to be centered on their final position.
-    var t1 = t0.transition()
-        .attrTween("d", tweenArc(function(d, i) {
-          var a0 = d.next.startAngle + d.next.endAngle,
-              a1 = d.startAngle - d.endAngle;
-          return {
-            startAngle: (a0 + a1) / 2,
-            endAngle: (a0 - a1) / 2
-          };
-        }));
-
-    // Wedges then update their values, changing size.
-    var t2 = t1.transition()
-          .attrTween("d", tweenArc(function(d, i) {
-            return {
-              startAngle: d.next.startAngle,
-              endAngle: d.next.endAngle
-            };
-          }));
-
-    // Wedges reunite into a single ring.
-    var t3 = t2.transition()
-        .attrTween("d", tweenArc(function(d, i) {
-          return {
-            innerRadius: innerRadius,
-            outerRadius: outerRadius
-          };
-        }));
-
-    setTimeout(function() { transition(!state); }, 5000);
-  }
-
-  function tweenArc(b) {
-    return function(a, i) {
-      var d = b.call(this, a, i), i = d3.interpolate(a, d);
-      for (var k in d) a[k] = d[k]; // update data
-      return function(t) { return arc(i(t)); };
-    };
-  }
-
-  </script>
   </body>
   </html>
