@@ -29,7 +29,18 @@ def service():
     return jsonify(data)
 
 
-
+@app.route("/census")
+def census():
+    #TEST small number 
+    census = pd.read_sql_query('SELECT * FROM census where id > 1;', con=engine)
+    data = {
+        "Zipcode": census.name.tolist(),
+        "Poverty": census.Poverty_perc.tolist(),
+        "Population": census.Total_Poverty_Population.tolist(), 
+        "Income": census.Total_Poverty_Population.tolist()
+        
+    }
+    return jsonify(data)
 
 
 
