@@ -30,6 +30,50 @@ var myMap = L.map("map", {
     
   });
 
+d3.json("/census",function(data) {  
+  console.log(data)});
+
+var MHI = [];
+var zip = [];
+var poverty = [];
+
+d3.json("/census",function(data) {  
+  data.Income.forEach(function (value) {
+    MHI.push(value);
+  });  
+});
+
+d3.json("/census",function(data) {  
+  data.Poverty.forEach(function (value) {
+    poverty.push(value);
+  });  
+});
+
+d3.json("/census",function(data) {  
+  data.Zipcode.forEach(function (value) {
+    zip.push(value);
+  });  
+});
+
+
+function MHIfromzip(zipcode) {
+  for(var i = 0; i < zip.length; i += 1) {
+      if(zip[i] == zipcode) {
+          return MHI[i];
+      }
+  }
+  return -1;
+}
+
+function povertyfromzip(zipcode) {
+  for(var i = 0; i < zip.length; i += 1) {
+      if(zip[i] == zipcode) {
+          return poverty[i];
+      }
+  }
+  return -1;
+}
+console.log(MHI);
 // Link to GeoJSON
 var APILink = "https://opendata.arcgis.com/datasets/fee863cb3da0417fa8b5aaf6b671f8a7_0.geojson";
 
@@ -61,8 +105,8 @@ d3.json(APILink, function(data) {
 
     // Binding a pop-up to each layer
     onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.ZIP + ", " + feature.properties.State + "<br>Median Household Income:<br>" +
-        "$" + feature.properties.MHI);
+      layer.bindPopup(feature.properties.ZIP + ", " + "<br>Poverty Rate:<br>"+ povertyfromzip(feature.properties.ZIP) + "<br>Median Household Income:<br>" +
+        "$" + MHIfromzip(feature.properties.ZIP));
     }
   }).addTo(myMap);
 
