@@ -74,6 +74,29 @@ function povertyfromzip(zipcode) {
   return -1;
 }
 console.log(MHI);
+// FUnction for highlighting zipcodes
+
+function highlightFeature(e) {
+  var layer = e.target;
+
+  layer.setStyle({
+    weight: 5,
+    color: '#666',
+    dashArray: '',
+    fillOpacity: 0.7
+  });
+
+  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    layer.bringToFront();
+  }
+
+  info.update(layer.feature.properties);
+}
+
+function resetHighlight(e) {
+  geojson.resetStyle(e.target);
+  info.update();
+}
 // Link to GeoJSON
 var APILink = "https://opendata.arcgis.com/datasets/fee863cb3da0417fa8b5aaf6b671f8a7_0.geojson";
 
@@ -107,6 +130,20 @@ d3.json(APILink, function(data) {
     onEachFeature: function(feature, layer) {
       layer.bindPopup(feature.properties.ZIP + ", " + "<br>Poverty Rate:<br>"+ povertyfromzip(feature.properties.ZIP) + "<br>Median Household Income:<br>" +
         "$" + MHIfromzip(feature.properties.ZIP));
+        layer.on('mouseover', function(event) { 
+          layer = event.target;
+          layer.openPopup();
+          layer.setStyle({
+            fillOpacity:0.5
+          }); 
+        });
+        layer.on('mouseout', function(event) {
+          layer = event.target; 
+          layer.closePopup(); 
+          layer.setStyle({
+            fillOpacity:1.0
+          });
+        });
     }
   }).addTo(myMap);
 
