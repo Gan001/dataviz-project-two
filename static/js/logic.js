@@ -30,7 +30,10 @@ var myMap = L.map("map", {
     
   });
 
-d3.json("/census",function(data) {  
+var cdata;
+
+d3.json("/census",function(data) {
+  cdata = data;
   console.log(data)});
 
 var MHI = [];
@@ -62,49 +65,28 @@ function MHIfromzip(zipcode) {
           return MHI[i];
       }
   }
-  return -1;
+  return ' Data not in census';
 }
 
 function povertyfromzip(zipcode) {
   for(var i = 0; i < zip.length; i += 1) {
       if(zip[i] == zipcode) {
-          return poverty[i];
+          return poverty[i] * 100 + '%';
       }
   }
-  return -1;
+  return ' Data not in census';
 }
-console.log(MHI);
-// FUnction for highlighting zipcodes
+// console.log(MHI);
 
-function highlightFeature(e) {
-  var layer = e.target;
-
-  layer.setStyle({
-    weight: 5,
-    color: '#666',
-    dashArray: '',
-    fillOpacity: 0.7
-  });
-
-  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-    layer.bringToFront();
-  }
-
-  info.update(layer.feature.properties);
-}
-
-function resetHighlight(e) {
-  geojson.resetStyle(e.target);
-  info.update();
-}
 // Link to GeoJSON
 var APILink = "https://opendata.arcgis.com/datasets/fee863cb3da0417fa8b5aaf6b671f8a7_0.geojson";
 
 var geojson;
-
+var data1;
 // Grab data with d3
 d3.json(APILink, function(data) {
-
+  data1 = data;
+  console.log(data1);
   // Create a new choropleth layer
   geojson = L.choropleth(data, {
 
@@ -128,21 +110,41 @@ d3.json(APILink, function(data) {
 
     // Binding a pop-up to each layer
     onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.ZIP + ", " + "<br>Poverty Rate:<br>"+ povertyfromzip(feature.properties.ZIP) + "<br>Median Household Income:<br>" +
-        "$" + MHIfromzip(feature.properties.ZIP));
+      // layer.bindPopup(feature.properties.ZIP + ", " + "<br>Poverty Rate:<br>"+ povertyfromzip(feature.properties.ZIP) + "<br>Median Household Income:<br>" +
+      //   "$" + MHIfromzip(feature.properties.ZIP));
+      // console.log('feature');
+      // console.log(feature);
+      // console.log('layer.feature');
+      // console.log(layer.feature);
         layer.on('mouseover', function(event) { 
           layer = event.target;
-          layer.openPopup();
+          // console.log('event');
+          // console.log(event.target);
+
+          // layer.openPopup();
           layer.setStyle({
-            fillOpacity:0.5
-          }); 
+            weight: 5,
+            color: 'black',
+            dashArray: '',
+            fillOpacity: 0.7
+            });
+          // console.log('layer.feature');
+          // console.log(layer.feature.properties.ZIP);
+          info.update(layer.feature.properties.ZIP);
+          svgadd.update(layer.feature.properties.ZIP);
         });
         layer.on('mouseout', function(event) {
           layer = event.target; 
-          layer.closePopup(); 
+          info.update();
+          svgadd.update();
+
+          // layer.closePopup(); 
           layer.setStyle({
-            fillOpacity:1.0
+            color: "#fff",
+            weight: 1,
+            fillOpacity: 0.8
           });
+          
         });
     }
   }).addTo(myMap);
@@ -164,7 +166,7 @@ d3.json(APILink, function(data) {
 
     div.innerHTML = legendInfo;
 
-    limits.forEach(function(limit, index) {
+    limits.forEach(function(limits, index) {
       labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
     });
 
@@ -174,5 +176,77 @@ d3.json(APILink, function(data) {
 
   // Adding legend to the map
   legend.addTo(myMap);
+  
+  // Set up the Control
+  var info = L.control({ position: "topright" });
+  info.onAdd = function() {
+    this._div = L.DomUtil.create("div", "control info");
+    this.update();
+		return this._div;
+  };  
+  info.update = function (props) {
+     this._div.innerHTML = '<h4>Zipcode Information</h4>' +  (props ?
+			'<b>' + 'Zipcode :' + props + '<br>' + ' MHI: $' + MHIfromzip(props) + "<br>Poverty Rate:<br>"+ povertyfromzip(props)
+			: 'Hover over a zipcode');
+  };
+
+  // Adding legend to the map
+  info.addTo(myMap);
+
+
+  // Make SVG For Chart and Text
+  var svgadd = L.control({ position: "bottomleft" });  
+  
+  svgadd.onAdd = function() {
+        this._div = L.DomUtil.create("div", "svg info");
+        this.update();
+      	return this._div;
+      };  
+  svgadd.update = function (props) {
+      var labels = props
+      var data = MHIfromzip(props)
+      console.log('labels', labels, 'data', data);
+      var Information = '<h4>Zipcode Information</h4>' +  (props ?
+        '<b>' + 'Zipcode :' + props + '<br>' + ' MHI: $' + MHIfromzip(props) + "<br>Poverty Rate:<br>"+ povertyfromzip(props)
+        : 'Hover over a zipcode');
+      Information += '<canvas id="myChart" width="10" height="10"></canvas>';
+      this._div.innerHTML = Information;
+      newChart(labels, data);
+      console.log('props', props);
+  };
+  var newChart = function(labels, data) {
+    var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '# of Votes',
+                        data: data,
+                        backgroundColor: 'blue',
+                        borderColor: 'black',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+    };
+  // Adding legend to the map
+  svgadd.addTo(myMap);
+
+
+
+
+
 
 });
+// 
+
