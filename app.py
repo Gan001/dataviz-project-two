@@ -20,7 +20,7 @@ def index():
 @app.route("/services")
 def service():
     #TEST small number 
-    service = pd.read_sql_query('select * from requests_311 limit 100', con=engine)
+    service = pd.read_sql_query('select * from requests_311 limit 500', con=engine)
     data = {
         "issue_type": service.issue_type.tolist(),
         "latitude": service.latitude.tolist(),
@@ -41,6 +41,7 @@ def census():
         
     }
     return jsonify(data)
+
 
 @app.route("/plot2")
 def plot2():
@@ -107,11 +108,6 @@ def mean():
     mean = pd.read_sql_query('select * from zip_mean', con=engine)
     data2 = mean.to_dict('records')
     return jsonify(data2)
-
-
-
-
-
 
 if __name__ == "__main__":
     app.run()
