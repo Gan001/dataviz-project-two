@@ -30,9 +30,15 @@ def service():
 
 
 
-
-
-
+@app.route("/efficiency-data")
+def efficiency():
+    efficiency = pd.read_sql_query('select * from city_efficiency limit 500', con=engine)
+    data2 = efficiency.to_dict('records')
+    data = {
+        "city":efficiency.city.tolist(),
+        "efficiency": efficiency.efficiency.tolist()
+    }
+    return jsonify(data2)
 
 
 
