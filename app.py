@@ -29,12 +29,57 @@ def service():
     }
     return jsonify(data)
 
+
 @app.route("/plot2")
 def plot2():
     return render_template('plot2.html')
 
+# @app.route("/plot3")
+# def plot3():
+#     service = pd.read_sql_query('select * from service_chart', con=engine)
+#     data = {
+#         "symbol": service.symbol.tolist(),
+#         "date": service.date.tolist(),
+#         "price": service.price.tolist(),
+#         }
+#     return render_template('plot3.html')
+
+# @app.route("/plot3-data")
+# def plot3Data():
+#     service = pd.read_sql_query('select * from service_chart', con=engine)
+
+#     #print(service.to_dict())
+#     data_list = list()
+#     for i, v in service.iterrows():
+#         data = {
+#             "symbol": v['symbol'],
+#             "date": v['date'],
+#             "price": v['price'],
+#             }
+#         data_list.append(data)
+
+#     print(data_list)
+
+#     data = {
+#         "symbol": service.symbol.tolist(),
+#         "date": service.date.tolist(),
+#         "price": service.price.tolist(),
+#         }
+#     return jsonify(data_lists)
+
+@app.route("/efficiency-data")
+def efficiency():
+    efficiency = pd.read_sql_query('select * from city_efficiency limit 500', con=engine)
+    data2 = efficiency.to_dict('records')
+    data = {
+        "city":efficiency.city.tolist(),
+        "efficiency": efficiency.efficiency.tolist()
+    }
+    return jsonify(data2)
+
 @app.route("/plot3")
 def plot3():
+    #Return to Home
     return render_template('plot3.html')
 
 
