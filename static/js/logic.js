@@ -103,11 +103,11 @@ d3.json("/census",function(data) {
   });  
 });
 
-d3.json("/efficiency-mean",function(data) {  
-  data.zip_code.forEach(function (value) {
-    zipeff.push(value);
-  });  
-});
+// d3.json("/efficiency-mean",function(data) {  
+//   data.zip_code.forEach(function (value) {
+//     zipeff.push(value);
+//   });  
+// });
 
 d3.json("/efficiency-mean",function(data) {  
   data.mean.forEach(function (value) {
@@ -127,7 +127,7 @@ function Population(zipcode) {
 function povertyfromzip(zipcode) {
   for(var i = 0; i < zip.length; i += 1) {
       if(zip[i] == zipcode) {
-          return poverty[i] * 100;
+          return poverty[i] * 1000;
       }
   }
   return ' Data not in census';
@@ -136,7 +136,7 @@ function povertyfromzip(zipcode) {
 function efficencyfromzip(zipcode) {
   for(var i = 0; i < zipeff.length; i += 1) {
     if(zipeff[i] == zipcode) {
-      return mean[i] * 100;
+      return mean[i];
   }
 }
 return ' Data not in census';
@@ -149,9 +149,9 @@ return ' Data not in census';
 		return this._div;
   };  
   info.update = function (props) {
-     this._div.innerHTML = '<h4>Zipcode Information</h4>' +  (props ?
-			'<b>' + 'Zipcode :' + props + '<br>' + ' Population:' + Population(props) + "<br>Poverty Rate:<br>"+ Math.round(povertyfromzip(props)* 100) / 100 + '%'
-      + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%': 'Hover over a zipcode');
+    this._div.innerHTML = '<h4>Zipcode Information</h4>' +  (props ?
+          '<b>' + 'Zipcode :' + props + '<br>' + ' Population' + Population(props) + "<br>Poverty Rate:<br>"+ Math.round(povertyfromzip(props)* 100)/100 +'%' 
+          + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%': 'Hover over a zipcode');
   };
 
   // Adding legend to the map
@@ -232,6 +232,9 @@ function resetHighlight(e) {
 function zoomToFeature(e) {
   myMap.fitBounds(e.target.getBounds());
 }
+function zoom(e) {
+  myMap.fitBounds(e.target.getBounds());
+}
 
 function onEachFeature(feature, layer) {
   layer.on({
@@ -272,7 +275,7 @@ d3.json(APILink, function(data) {
 		div.innerHTML = labels.join('<br>');
 		return div;
 	};
-
+  
 	legend.addTo(myMap);
 
   function draw(data) {
@@ -291,8 +294,12 @@ d3.json(APILink, function(data) {
         var myChart = new dimple.chart(svg, data);
         var x = myChart.addCategoryAxis("x","zip_code");
         var y = myChart.addMeasureAxis("y", "mean");
-        myChart.addSeries(null, dimple.plot.bar);
+        var myseries = myChart.addSeries(null, dimple.plot.bar);
         x.addOrderRule("mean", true);
+        myseries.addEventHandler("click", function (e) {
+          svgadd.update(e.xValue),
+          highlightFeature(e.xValue)});
+          
         myChart.draw();
       };
  
