@@ -42,7 +42,11 @@ def census():
     }
     return jsonify(data)
 
-
+@app.route("/efficiency-mean")
+def mean():
+    mean = pd.read_sql_query('select * from zip_mean', con=engine)
+    data2 = mean.to_dict('records')
+    return jsonify(data2)
 
 
 

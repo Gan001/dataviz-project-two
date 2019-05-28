@@ -83,7 +83,8 @@ d3.json("/census",function(data) {
 var Pop = [];
 var zip = [];
 var poverty = [];
-
+var zipeff = [];
+var mean = [];
 d3.json("/census",function(data) {  
   data.Population.forEach(function (value) {
     Pop.push(value);
@@ -102,6 +103,17 @@ d3.json("/census",function(data) {
   });  
 });
 
+d3.json("/efficiency-mean",function(data) {  
+  data.zip_code.forEach(function (value) {
+    zipeff.push(value);
+  });  
+});
+
+d3.json("/efficiency-mean",function(data) {  
+  data.mean.forEach(function (value) {
+    mean.push(value);
+  });  
+});
 
 function Population(zipcode) {
   for(var i = 0; i < zip.length; i += 1) {
@@ -121,6 +133,14 @@ function povertyfromzip(zipcode) {
   return ' Data not in census';
 }
 
+function efficencyfromzip(zipcode) {
+  for(var i = 0; i < zipeff.length; i += 1) {
+    if(zipeff[i] == zipcode) {
+      return mean[i] * 100;
+  }
+}
+return ' Data not in census';
+}
   // Set up the Control
   var info = L.control({ position: "topright" });
   info.onAdd = function() {
@@ -131,7 +151,7 @@ function povertyfromzip(zipcode) {
   info.update = function (props) {
      this._div.innerHTML = '<h4>Zipcode Information</h4>' +  (props ?
 			'<b>' + 'Zipcode :' + props + '<br>' + ' Population:' + Population(props) + "<br>Poverty Rate:<br>"+ Math.round(povertyfromzip(props)* 100) / 100 + '%'
-      + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%'	: 'Hover over a zipcode');
+      + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%'	+ "<br>Efficiency Mean:<br>" + efficencyfromzip(props) : 'Hover over a zipcode');
   };
 
   // Adding legend to the map
@@ -149,7 +169,7 @@ function povertyfromzip(zipcode) {
      var data = povertyfromzip(props)
      console.log('labels', labels, 'data', data);
      var Information = '<h4>Zipcode Information</h4>' +  (props ?
-       '<b>' + 'Zipcode :' + props + '<br>' + ' MHI: $' + Population(props) + "<br>Poverty Rate:<br>"+ povertyfromzip(props)
+       '<b>' + 'Zipcode :' + props + '<br>' + ' Population:' + Population(props) + "<br>Poverty Rate:<br>"+ povertyfromzip(props)
        : 'Hover over a zipcode');
      Information += '<canvas id="myChart" width="10" height="10"></canvas>';
      this._div.innerHTML = Information;
@@ -255,7 +275,28 @@ d3.json(APILink, function(data) {
 
 	legend.addTo(myMap);
 
-
+  function draw(data) {
+    console.log(data);
+       var margin = 75,
+     width = 1400 - margin,
+     height = 600 - margin;
+ 
+     var svg = d3.select("body")
+                 .append("svg")
+                 .attr("width", width + margin)
+                 .attr("height", height + margin)
+                 .append('g')
+                 .attr('class','chart');
+                 
+        var myChart = new dimple.chart(svg, data);
+        var x = myChart.addCategoryAxis("x","zip_code");
+        var y = myChart.addMeasureAxis("y", "mean");
+        myChart.addSeries(null, dimple.plot.bar);
+        x.addOrderRule("mean", true);
+        myChart.draw();
+      };
+ 
+      d3.json("/efficiency-mean", draw);
 
 
 
