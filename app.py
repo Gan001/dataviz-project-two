@@ -29,6 +29,18 @@ def service():
     }
     return jsonify(data)
 
+@app.route("/census")
+def census():
+    #TEST small number 
+    census = pd.read_sql_query('SELECT * FROM census where id > 1;', con=engine)
+    data = {
+        "Zipcode": census.name.tolist(),
+        "Poverty": census.Poverty_perc.tolist(),
+        "Population": census.Total_Poverty_Population.tolist(), 
+        "Income": census.Total_Poverty_Population.tolist()
+        
+    }
+    return jsonify(data)
 
 @app.route("/plot2")
 def plot2():
@@ -82,9 +94,19 @@ def plot3():
     #Return to Home
     return render_template('plot3.html')
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
+@app.route("/links")
+def links():
+    return render_template('links.html')
 
-
+@app.route("/efficiency-mean")
+def mean():
+    mean = pd.read_sql_query('select * from zip_mean', con=engine)
+    data2 = mean.to_dict('records')
+    return jsonify(data2)
 
 
 
