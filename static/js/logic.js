@@ -151,7 +151,7 @@ return ' Data not in census';
   info.update = function (props) {
      this._div.innerHTML = '<h4>Zipcode Information</h4>' +  (props ?
 			'<b>' + 'Zipcode :' + props + '<br>' + ' Population:' + Population(props) + "<br>Poverty Rate:<br>"+ Math.round(povertyfromzip(props)* 100) / 100 + '%'
-      + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%'	+ "<br>Efficiency Mean:<br>" + efficencyfromzip(props) : 'Hover over a zipcode');
+      + "<br>Miami Average Poverty Rate:<br>"+ Math.round(.1897* 100) / 100 + '%': 'Hover over a zipcode');
   };
 
   // Adding legend to the map
